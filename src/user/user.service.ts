@@ -12,7 +12,6 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<User | string> {
-    console.log(process.env.CAPTCHA_SECRET);
     return await verify(process.env.CAPTCHA_SECRET, createUserDto.captchaToken)
       .then(async (verifyData) => {
         if (verifyData.success === true) {
