@@ -6,4 +6,7 @@ export class MonthDaysDto {
 
   @IsString()
   year: string;
+
+  @IsString()
+  userId: string;
 }

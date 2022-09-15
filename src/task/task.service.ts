@@ -24,7 +24,7 @@ export class TaskService {
 
   async getDaysOfMonth(query: MonthDaysDto) {
     const monthDays = await this.prisma.$queryRaw`SELECT id,dateTime FROM Task 
-    WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year}`;
+    WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year} AND userId = ${query.userId}`;
 
     return monthDays;
   }
