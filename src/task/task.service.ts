@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { MonthDaysDto } from './dto/month-days.dto';
+import { TaskDayDto } from './dto/task-day.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
 
@@ -23,10 +24,17 @@ export class TaskService {
   }
 
   async getDaysOfMonth(query: MonthDaysDto) {
-    const monthDays = await this.prisma.$queryRaw`SELECT id,dateTime FROM Task 
+    const monthDays = await this.prisma.$queryRaw`SELECT id, dateTime FROM Task 
     WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year} AND userId = ${query.userId}`;
 
     return monthDays;
+  }
+
+  async getTaskByDate(query: TaskDayDto) {
+    const tasks = await this.prisma.$queryRaw`SELECT * FROM Task 
+    WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year} AND DAY(dateTime) = ${query.day} AND userId = ${query.userId}`;
+
+    return tasks;
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto) {

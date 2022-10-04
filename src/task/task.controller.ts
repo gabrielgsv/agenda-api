@@ -8,11 +8,14 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { MonthDaysDto } from './dto/month-days.dto';
+import { TaskDayDto } from './dto/task-day.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskService } from './task.service';
 
+@ApiTags('Task')
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
@@ -30,6 +33,11 @@ export class TaskController {
   @Get('days-of-month')
   getDaysOfMonth(@Query() query: MonthDaysDto) {
     return this.taskService.getDaysOfMonth(query);
+  }
+
+  @Get('task-day')
+  getTaskByDate(@Query() query: TaskDayDto) {
+    return this.taskService.getTaskByDate(query);
   }
 
   @Put(':id')
