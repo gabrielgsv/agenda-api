@@ -68,6 +68,9 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.1.6"
   },
+  "resolutions": {
+    "is-promise": "2.1.0"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
