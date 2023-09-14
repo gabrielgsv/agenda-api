@@ -25,14 +25,14 @@ export class TaskService {
 
   async getDaysOfMonth(query: MonthDaysDto) {
     const monthDays = await this.prisma.$queryRaw`SELECT id, dateTime FROM Task 
-    WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year} AND userId = ${query.userId}`;
+    WHERE ltrim(strftime('%m', dateTime / 1000, 'unixepoch'), '0') = ${query.month} AND ltrim(strftime('%Y', dateTime / 1000, 'unixepoch'), '0') = ${query.year} AND userId = ${query.userId}`;
 
     return monthDays;
   }
 
   async getTaskByDate(query: TaskDayDto) {
-    const tasks = await this.prisma.$queryRaw`SELECT * FROM Task 
-    WHERE MONTH(dateTime) = ${query.month} AND YEAR(dateTime) = ${query.year} AND DAY(dateTime) = ${query.day} AND userId = ${query.userId}`;
+    const tasks = await this.prisma.$queryRaw`SELECT * FROM Task
+    WHERE ltrim(strftime('%m', dateTime / 1000, 'unixepoch'), '0') = ${query.month} AND ltrim(strftime('%Y', dateTime / 1000, 'unixepoch'), '0') = ${query.year} AND ltrim(strftime('%d', dateTime / 1000, 'unixepoch'), '0') = ${query.day} AND userId = ${query.userId}`;
 
     return tasks;
   }
