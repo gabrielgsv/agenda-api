@@ -1,7 +1,7 @@
 export class Task {
   id?: number;
-  userId: number;
+  user_id: number;
   title: string;
-  dateTime: Date;
+  date_time: Date;
   description: string;
 }

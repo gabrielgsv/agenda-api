@@ -11,8 +11,14 @@ export class TaskService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task | string> {
+    const data = {
+      user_id: createTaskDto.userId,
+      title: createTaskDto.title,
+      date_time: createTaskDto.dateTime,
+      description: createTaskDto.description,
+    };
     const createTask = await this.prisma.task.create({
-      data: createTaskDto,
+      data,
     });
     return createTask;
   }
@@ -24,15 +30,26 @@ export class TaskService {
   }
 
   async getDaysOfMonth(query: MonthDaysDto) {
-    const monthDays = await this.prisma.$queryRaw`SELECT id, dateTime FROM Task 
-    WHERE ltrim(strftime('%m', dateTime / 1000, 'unixepoch'), '0') = ${query.month} AND ltrim(strftime('%Y', dateTime / 1000, 'unixepoch'), '0') = ${query.year} AND userId = ${query.userId}`;
+    const monthDays = await this.prisma
+      .$queryRaw`SELECT id, date_time AS "dateTime" FROM public."Task" 
+    WHERE EXTRACT(MONTH FROM date_time) = ${parseInt(
+      query.month,
+    )} AND EXTRACT(YEAR FROM date_time) = ${parseInt(
+      query.year,
+    )} AND user_id = ${parseInt(query.userId)}`;
 
     return monthDays;
   }
 
   async getTaskByDate(query: TaskDayDto) {
-    const tasks = await this.prisma.$queryRaw`SELECT * FROM Task
-    WHERE ltrim(strftime('%m', dateTime / 1000, 'unixepoch'), '0') = ${query.month} AND ltrim(strftime('%Y', dateTime / 1000, 'unixepoch'), '0') = ${query.year} AND ltrim(strftime('%d', dateTime / 1000, 'unixepoch'), '0') = ${query.day} AND userId = ${query.userId}`;
+    const tasks = await this.prisma.$queryRaw`SELECT * FROM public."Task"
+    WHERE EXTRACT(MONTH FROM date_time) = ${parseInt(
+      query.month,
+    )} AND EXTRACT(YEAR FROM date_time) = ${parseInt(
+      query.year,
+    )} AND EXTRACT(DAY FROM date_time) = ${parseInt(
+      query.day,
+    )} AND user_id = ${parseInt(query.userId)}`;
 
     return tasks;
   }
